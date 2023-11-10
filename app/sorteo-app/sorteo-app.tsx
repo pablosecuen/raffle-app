@@ -115,7 +115,7 @@ export default function SorteoApp() {
   return (
     <main className="flex min-h-screen flex-col  items-center justify-between p-24 ">
       <Image src={logo} alt="logo" width={200} height={0} />
-      <h1 className="text-3xl uppercase tracking-widest">Raffle App</h1>
+      {/*  <h1 className="text-3xl uppercase tracking-widest">Raffle App</h1> */}
       <div>
         <h2 className="mb-4">Participantes:</h2>
         <div className="w-96 p-8 border border-white/20 shadow-md shadow-white/40 rounded-3xl">

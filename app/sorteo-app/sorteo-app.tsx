@@ -114,6 +114,7 @@ export default function SorteoApp() {
   };
   return (
     <main className="flex min-h-screen flex-col  items-center justify-between p-24 ">
+      <Image src={logo} alt="logo" width={200} height={0} />
       <h1 className="text-3xl uppercase tracking-widest">Raffle App</h1>
       <div>
         <h2 className="mb-4">Participantes:</h2>
@@ -154,7 +155,7 @@ export default function SorteoApp() {
 
       {modalganadores && <ModalListaGanadores setModalGanadores={setModalGanadores} />}
 
-      <div className="flex gap-8">
+      <div className="flex gap-8 pt-8">
         {" "}
         <button
           onClick={sortearGanador}
@@ -164,7 +165,7 @@ export default function SorteoApp() {
         </button>
         <button
           onClick={handleModalGanadores}
-          className="absolute bottom-4 right-4 z-50 border border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 w-36 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
+          className="absolute bottom-4 right-4  z-50 border border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 w-64 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
         >
           {" "}
           Lista de Ganadores

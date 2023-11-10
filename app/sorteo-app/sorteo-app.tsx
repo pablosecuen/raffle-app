@@ -127,17 +127,7 @@ export default function SorteoApp() {
           </ul>
         </div>
       </div>
-      {/*     <div>
-        <h2>Ganadores:</h2>
-        <ul>
-          {ganadores.map((ganador, index) => (
-            <li key={index} className="text-white">
-              {ganador}
-            </li>
-          ))}
-        </ul>
-      </div> */}
-      {/* Modal */}
+
       {showModal && ganador?.length > 0 && (
         <Modal
           ganador={ganador}

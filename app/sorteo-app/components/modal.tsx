@@ -1,5 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef } from "react";
+import ganadorsound from "@/public/assets/confetti.mp3";
 
 interface ModalProps {
   ganador: string;
@@ -12,10 +14,20 @@ const Modal: React.FC<ModalProps> = ({ ganador, onClose, limpiarGanadores }) => 
     limpiarGanadores();
   };
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Reproducir el sonido al montar el modal
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
+  }, []);
+
   return (
     <AnimatePresence>
       {ganador && (
         <>
+          <audio ref={audioRef} src={ganadorsound} />
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

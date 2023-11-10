@@ -1,7 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef } from "react";
-import ganadorsound from "@/public/assets/confetti.mp3";
 
 interface ModalProps {
   ganador: string;
@@ -27,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({ ganador, onClose, limpiarGanadores }) => 
     <AnimatePresence>
       {ganador && (
         <>
-          <audio ref={audioRef} src={ganadorsound} />
+          <audio ref={audioRef} src="/raffle-app/public/assets/confetti.mp3" loop={false} />
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

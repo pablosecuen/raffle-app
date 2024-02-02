@@ -6,6 +6,7 @@ import ModalListaGanadores from "./components/modal-listaganadores";
 import Image from "next/image";
 import logo from "@/public/assets/Logo.png";
 import { useDropzone } from "react-dropzone";
+import { Toaster, toast } from "sonner";
 
 export default function SorteoApp() {
   const [participantes, setParticipantes] = useState<string[]>([]);
@@ -36,6 +37,7 @@ export default function SorteoApp() {
   const handleLimpiarGanadores = () => {
     sessionStorage.removeItem("ganadores");
     setGanadores([]);
+    toast("Lista de ganadores eliminada");
   };
 
   const sortearGanador = () => {
@@ -59,6 +61,7 @@ export default function SorteoApp() {
     // Muestra el modal con el ganador
     setGanador(nuevoGanador);
     setShowModal(true);
+    toast("Sorteo realizado con exito");
   };
 
   const onDrop = (acceptedFiles: any) => {
@@ -76,9 +79,13 @@ export default function SorteoApp() {
           "participantes",
           JSON.stringify([...participantes, ...nuevosParticipantes])
         );
+        toast("Archivo subido correctamente");
       };
 
       reader.readAsText(file);
+    } else {
+      // Mostrar alerta de error si no se selecciona ningún archivo
+      toast("Por favor, selecciona un archivo");
     }
   };
 
@@ -103,7 +110,7 @@ export default function SorteoApp() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-evenly p-24 antialiased max-w-screen ">
       <Image src={logo} alt="logo" width={100} height={0} className="w-12 md:w-auto" />
-
+      <Toaster />
       <h2 className="mb-4">Participantes:</h2>
       <div className="md:w-96 w-64 p-8 border border-white/20 shadow-md shadow-white/40 rounded-3xl">
         <ul className="max-h-96 overflow-y-auto ">

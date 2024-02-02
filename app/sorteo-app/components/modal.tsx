@@ -10,7 +10,6 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ ganador, onClose, limpiarGanadores }) => {
   const handleOnclose = () => {
     onClose();
-    limpiarGanadores();
   };
 
   const audioRef = useRef<HTMLAudioElement | null>(null);

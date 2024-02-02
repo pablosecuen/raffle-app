@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import * as XLSX from "xlsx";
 import Confetti from "react-confetti";
 import Modal from "./components/modal";
-import { uploadDataToFirestore, verificarDatosEnFirestore } from "../utils";
+
 import {
   getFirestore,
   collection,
@@ -102,11 +101,11 @@ export default function SorteoApp() {
       <div className="flex flex-col justify-center items-center gap-20 select-none">
         {" "}
         <Image src={logo} alt="logo" width={300} height={0} />
-        <div className="animate-pulse text-4xl uppercase tracking-widest ">
+        <div className="animate-pulse text-xl uppercase tracking-widest ">
           Cargando Nuestra Raffle App, Por favor aguarda...
         </div>
       </div>
-    ); // Pantalla de carga
+    ); 
   }
 
   const handleModalGanadores = () => {
@@ -114,7 +113,7 @@ export default function SorteoApp() {
   };
   return (
     <main className="flex min-h-screen flex-col  items-center justify-between p-24 ">
-      <Image src={logo} alt="logo" width={200} height={0} />
+      <Image src={logo} alt="logo" width={100} height={0} />
       {/*  <h1 className="text-3xl uppercase tracking-widest">Raffle App</h1> */}
       <div>
         <h2 className="mb-4">Participantes:</h2>

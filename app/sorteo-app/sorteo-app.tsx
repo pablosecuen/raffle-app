@@ -171,7 +171,7 @@ export default function SorteoApp() {
         </button>
         <button
           onClick={handleModalGanadores}
-          className="absolute bottom-28 md:right-4 right-1/2 translate-x-1/2  md:translate-x-0 z-50 border border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 w-64 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
+          className="absolute bottom-4 md:bottom-28 md:right-4 right-1/2 translate-x-1/2  md:translate-x-0 z-50 border border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 w-64 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
         >
           Lista de Ganadores
         </button>

@@ -27,7 +27,7 @@ Clone the Repository:
 
 bash
 Copy code
-git clone https://github.com/your-username/lottery-app.git
+git clone https://github.com/pablosecuen/raffle-app
 cd lottery-app
 Install Dependencies:
 
@@ -86,7 +86,7 @@ Bienvenido/a a Raffle App, una aplicación simple para realizar sorteos de maner
 
 1. **Clonar el Repositorio:**
    ```bash
-   git clone https://github.com/tu-usuario/sorteo-app.git
+   https://github.com/pablosecuen/raffle-app.git
    cd sorteo-app
 
 

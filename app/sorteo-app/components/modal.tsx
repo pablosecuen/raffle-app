@@ -5,9 +5,9 @@ import { useEffect, useRef } from "react";
 interface ModalProps {
   ganador: string;
   onClose: () => void;
-  limpiarGanadores: () => void;
+  handleLimpiarGanadores: () => void;
 }
-const Modal: React.FC<ModalProps> = ({ ganador, onClose, limpiarGanadores }) => {
+const Modal: React.FC<ModalProps> = ({ ganador, onClose, handleLimpiarGanadores }) => {
   const handleOnclose = () => {
     onClose();
   };

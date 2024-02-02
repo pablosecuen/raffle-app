@@ -2,19 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Confetti from "react-confetti";
 import Modal from "./components/modal";
-
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  addDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-import app from "../firestore";
 import ModalListaGanadores from "./components/modal-listaganadores";
 import Image from "next/image";
 import logo from "@/public/assets/Logo.png";
+import { useDropzone } from "react-dropzone";
 
 export default function SorteoApp() {
   const [participantes, setParticipantes] = useState<string[]>([]);
@@ -25,43 +16,30 @@ export default function SorteoApp() {
   const [ganador, setGanador] = useState<string>("");
 
   useEffect(() => {
-    const fetchDataFromFirestore = async () => {
-      const db = getFirestore(app);
-      const ganadoresCollection = collection(db, "ganadores");
-      const usuariosCollection = collection(db, "usuarios");
+    // Cargar participantes desde sessionStorage al iniciar la aplicación
+    const participantesGuardados = JSON.parse(sessionStorage.getItem("participantes") || "[]");
+    setParticipantes(participantesGuardados);
 
-      try {
-        // Obtener ganadores
-        const ganadoresSnapshot = await getDocs(ganadoresCollection);
-        const ganadoresFromFirestore = ganadoresSnapshot.docs.map((doc) => doc.data().nombre);
-        setGanadores(ganadoresFromFirestore);
+    // Cargar ganadores desde sessionStorage al iniciar la aplicación
+    const ganadoresGuardados = JSON.parse(sessionStorage.getItem("ganadores") || "[]");
+    setGanadores(ganadoresGuardados);
 
-        // Obtener participantes
-        const usuariosSnapshot = await getDocs(usuariosCollection);
-        const participantesMap = new Map<string, boolean>();
-
-        usuariosSnapshot.docs.forEach((doc) => {
-          const nombre = doc.data().nombre;
-          participantesMap.set(nombre, true);
-        });
-
-        // Filtrar los ganadores de la lista de participantes
-        const participantesFiltrados = Array.from(participantesMap.keys()).filter(
-          (nombre) => !ganadores.includes(nombre)
-        );
-
-        setParticipantes(participantesFiltrados);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error al obtener datos de Firestore:", error);
-      }
-    };
-
-    fetchDataFromFirestore();
+    setLoading(false);
   }, []);
 
-  const sortearGanador = async () => {
-    if (loading || participantes.length === 0) {
+  useEffect(() => {
+    // Obtén ganadores desde sessionStorage después de limpiar
+    const ganadoresGuardados = JSON.parse(sessionStorage.getItem("ganadores") || "[]");
+    setGanadores(ganadoresGuardados);
+  }, []);
+
+  const handleLimpiarGanadores = () => {
+    sessionStorage.removeItem("ganadores");
+    setGanadores([]);
+  };
+
+  const sortearGanador = () => {
+    if (participantes.length === 0) {
       return;
     }
 
@@ -70,68 +48,76 @@ export default function SorteoApp() {
     const nuevoGanador = participantes[ganadorIndex];
 
     // Elimina al ganador de la lista de participantes
-    setParticipantes(participantes.filter((nombre) => nombre !== nuevoGanador));
+    const nuevosParticipantes = participantes.filter((nombre) => nombre !== nuevoGanador);
+    setParticipantes(nuevosParticipantes);
+    sessionStorage.setItem("participantes", JSON.stringify(nuevosParticipantes));
 
-    try {
-      // Agrega al ganador a la colección de ganadores en Firestore
-      const db = getFirestore(app);
-      const ganadoresCollection = collection(db, "ganadores");
-      await addDoc(ganadoresCollection, {
-        nombre: nuevoGanador,
-        timestamp: serverTimestamp(),
-      });
+    // Actualiza el estado de ganadores en el componente
+    setGanadores([...ganadores, nuevoGanador]);
+    sessionStorage.setItem("ganadores", JSON.stringify([...ganadores, nuevoGanador]));
 
-      // Actualiza el estado de ganadores en el componente
-      setGanadores([...ganadores, nuevoGanador]);
+    // Muestra el modal con el ganador
+    setGanador(nuevoGanador);
+    setShowModal(true);
+  };
 
-      // Muestra el modal con el ganador
-      setGanador(nuevoGanador);
-      setShowModal(true);
-    } catch (error) {
-      console.error("Error al agregar ganador a Firestore:", error);
+  const onDrop = (acceptedFiles: any) => {
+    const file = acceptedFiles[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const content = e.target.result;
+        const nuevosParticipantes = content.split(",").map((nombre: String) => nombre.trim());
+
+        // Actualizar estado local y sessionStorage
+        setParticipantes([...participantes, ...nuevosParticipantes]);
+        sessionStorage.setItem(
+          "participantes",
+          JSON.stringify([...participantes, ...nuevosParticipantes])
+        );
+      };
+
+      reader.readAsText(file);
     }
   };
 
-  const limpiarGanadores = () => {
-    setGanadores([]);
-  };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center gap-20 select-none">
         {" "}
-        <Image src={logo} alt="logo" width={300} height={0} />
-        <div className="animate-pulse text-xl uppercase tracking-widest ">
+        <Image src={logo} alt="logo" width={200} height={0} />
+        <div className="animate-pulse text-xl uppercase tracking-widest text-center ">
           Cargando Nuestra Raffle App, Por favor aguarda...
         </div>
       </div>
-    ); 
+    );
   }
 
   const handleModalGanadores = () => {
     setModalGanadores(!modalganadores);
   };
+
   return (
-    <main className="flex min-h-screen flex-col  items-center justify-between p-24 ">
-      <Image src={logo} alt="logo" width={100} height={0} />
-      {/*  <h1 className="text-3xl uppercase tracking-widest">Raffle App</h1> */}
-      <div>
-        <h2 className="mb-4">Participantes:</h2>
-        <div className="w-96 p-8 border border-white/20 shadow-md shadow-white/40 rounded-3xl">
-          {" "}
-          <ul className="max-h-96 overflow-y-auto ">
-            {participantes.map((nombre, index) => (
-              <li key={index}>{nombre}</li>
-            ))}
-          </ul>
-        </div>
+    <main className="flex min-h-screen flex-col items-center justify-evenly p-24 antialiased max-w-screen ">
+      <Image src={logo} alt="logo" width={100} height={0} className="w-12 md:w-auto" />
+
+      <h2 className="mb-4">Participantes:</h2>
+      <div className="md:w-96 w-64 p-8 border border-white/20 shadow-md shadow-white/40 rounded-3xl">
+        <ul className="max-h-96 overflow-y-auto ">
+          {participantes.map((nombre, index) => (
+            <li key={index}>{nombre}</li>
+          ))}
+        </ul>
       </div>
 
       {showModal && ganador?.length > 0 && (
         <Modal
           ganador={ganador}
           onClose={() => setShowModal(false)}
-          limpiarGanadores={limpiarGanadores}
+          handleLimpiarGanadores={handleLimpiarGanadores}
         />
       )}
 
@@ -142,21 +128,40 @@ export default function SorteoApp() {
         </div>
       )}
 
-      {modalganadores && <ModalListaGanadores setModalGanadores={setModalGanadores} />}
+      {modalganadores && (
+        <ModalListaGanadores
+          handleLimpiarGanadores={handleLimpiarGanadores}
+          setModalGanadores={setModalGanadores}
+          ganadores={ganadores}
+        />
+      )}
 
       <div className="flex gap-8 pt-8">
-        {" "}
+        <div
+          {...getRootProps()}
+          className={`border border-dashed border-white/20 p-4 rounded-3xl ${
+            isDragActive ? "border-blue-500" : ""
+          }`}
+        >
+          <input {...getInputProps()} accept=".txt" />
+          {isDragActive ? (
+            <p>Suelta los archivos aquí...</p>
+          ) : (
+            <p className="text-xs md:text-base">
+              Arrastra y suelta archivos aquí, o haz clic para seleccionar archivos
+            </p>
+          )}
+        </div>
         <button
           onClick={sortearGanador}
-          className="border border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 w-36 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
+          className="border w-auto h-10 border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
         >
           Sortear
         </button>
         <button
           onClick={handleModalGanadores}
-          className="absolute bottom-4 right-4  z-50 border border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 w-64 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
+          className="absolute bottom-4 md:right-4 right-1/2 translate-x-1/2  md:translate-x-0 z-50 border border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 w-64 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
         >
-          {" "}
           Lista de Ganadores
         </button>
       </div>

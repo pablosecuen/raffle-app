@@ -92,7 +92,7 @@ export default function SorteoApp() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  if (loading) {
+  /*   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center gap-20 select-none">
         {" "}
@@ -102,7 +102,7 @@ export default function SorteoApp() {
         </div>
       </div>
     );
-  }
+  } */
 
   const handleModalGanadores = () => {
     setModalGanadores(!modalganadores);
@@ -173,7 +173,7 @@ export default function SorteoApp() {
           onClick={handleModalGanadores}
           className="absolute bottom-4 md:bottom-28 md:right-4 right-1/2 translate-x-1/2  md:translate-x-0 z-50 border border-white/20 shadow-md shadow-white/20 rounded-3xl py-1 px-4 w-64 transform duration-200 transition ease-in-out hover:translate-y-[2px]"
         >
-          Lista de Ganadores 
+          Lista de Ganadores
         </button>
       </div>
       <hr className="my-10 border-gray-200  dark:border-gray-700 lg:my-8" />

@@ -70,13 +70,13 @@ const ModalListaGanadores: React.FC<ModalProps> = ({
                 {" "}
                 <button
                   onClick={handleLimpiarGanadores}
-                  className=" bg-gray-400 rounded-2xl py-1 px-2 hover:bg-gray-500 tranform transition duration-200 hover:translate-x-[2px] hover:translate-y-[2px] "
+                  className=" bg-gray-400 rounded-2xl text-xs md:text-base py-1 px-2 hover:bg-gray-500 tranform transition duration-200 hover:translate-x-[2px] hover:translate-y-[2px] "
                 >
                   Limpiar Ganadores
                 </button>
                 <button
                   onClick={handleOnclose}
-                  className=" bg-gray-400 rounded-2xl py-1 px-2 hover:bg-gray-500 tranform transition duration-200 hover:translate-x-[2px] hover:translate-y-[2px] "
+                  className=" bg-gray-400 rounded-2xl py-1 px-2 text-xs md:text-base hover:bg-gray-500 tranform transition duration-200 hover:translate-x-[2px] hover:translate-y-[2px] "
                 >
                   Cerrar
                 </button>
